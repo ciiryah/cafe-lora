@@ -4,7 +4,7 @@ export const Gallery = () => {
   const element = document.createElement('section');
   element.classList.add('gallery');
   element.innerHTML = `
-        <div class="container">
+        <div class="container" id="gallery">
           <div class="gallery__content">
             <h2>Nově otevřeno!</h2>
             <div class="gallery__cols">

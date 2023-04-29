@@ -7,7 +7,6 @@ import { Gallery } from './components/Gallery/index.js';
 import { Contact } from './components/Contact/index.js';
 
 console.log('funguju!');
-console.log(Header);
 
 const pageElement = document.createElement('div');
 pageElement.classList.add('page');
