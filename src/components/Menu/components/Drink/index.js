@@ -2,29 +2,56 @@ import './style.css';
 import { Layer } from '../Layer/index.js';
 
 export const Drink = (props) => {
-  const { name, ordered, image } = props;
+  const { id, name, ordered, image, layers } = props;
 
   const element = document.createElement('div');
-  element.classList.add('drinks-list');
+  element.classList.add('drink');
   element.innerHTML = `
-  <div class="drink">
       <div class="drink__product">
         <div class="drink__cup">
-          <img src="https://cafelora.kodim.app/assets/cups/espresso.png">
+          <img src="${image}">
         </div>
         <div class="drink__info">
-          <h3>Espresso</h3>
+          <h3>${name}</h3>
         </div>
       </div>
       <div class="drink__controls">
         <button class="order-btn">
-          Objednat
         </button>
       </div>
-  </div>
 `;
 
   const drinkInfoElm = element.querySelector('.drink__info');
-  drinkInfoElm.append(Layer());
+  layers.map((layer) => {
+    drinkInfoElm.append(Layer(layer));
+  });
+
+  const orderBtnElm = element.querySelector('.order-btn');
+  if (ordered === true) {
+    orderBtnElm.textContent = 'Zrušit';
+    orderBtnElm.classList.toggle('order-btn--ordered');
+  } else {
+    orderBtnElm.textContent = 'Objednat';
+  }
+
+  orderBtnElm.addEventListener('click', () => {
+    console.log('hi');
+    fetch(`https://cafelora.kodim.app/api/me/drinks/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({
+        ordered: !ordered,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.result);
+        element.replaceWith(Drink(data.result));
+      });
+  });
+
   return element;
 };
